@@ -8,7 +8,7 @@ def print_field(matrix, obj=None):
         matrix[x][y] = 1
 
     os.system('cls')
-    for row in matrix[::-1]:
+    for row in matrix:
         s = ''
         for val in row:
             if val:
