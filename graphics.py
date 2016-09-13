@@ -1,21 +1,12 @@
 import os
 
-def print_field(matrix, obj=None):
-    if obj is None:
-        obj = []
-    for y,x in obj:
-        prev = matrix[x][y]
-        matrix[x][y] = 1
-
-    os.system('cls')
-    for row in matrix:
+def print_field(self):
+    # os.system('cls')
+    for y, row in enumerate(self.part):
         s = ''
-        for val in row:
-            if val:
+        for x, val in enumerate(row):
+            if val or [x,y] in self.object:
                 s += '#'
             else:
                 s += ' '
         print(s)
-
-    for y,x in obj:
-        matrix[x][y] = prev
