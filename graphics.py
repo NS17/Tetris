@@ -1,7 +1,7 @@
 import os
 
 def print_field(self):
-    # os.system('cls')
+    os.system('cls')
     for y, row in enumerate(self.part):
         s = ''
         for x, val in enumerate(row):
