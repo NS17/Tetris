@@ -50,13 +50,18 @@ class Field:
 			self.part[y][x] = 1
 		self.object = [[0,0], [0,1], [0,2], [1,1]]
 
+	def new_object(self):
+		while F.down():
+			print_field(F)
+			time.sleep(0.2)
+		self.place_object()
+
+
 F = Field(10, 10)
 F.down()
 print_field(F)
-while F.down():
-	print_field(F)
-	time.sleep(0.8)
 
+F.new_object()
 
 #d = F.down()
 #l = F.line()
