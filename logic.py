@@ -9,7 +9,7 @@ class Field:
 		self.width = width
 		self.height = height
 		self.part  = [[0] * width for i in range(height)]
-		self.object = [[0,0], [0,1], [0,2], [1,1]]
+		self.object = [[0,0], [1,0], [2,0], [1,1]]
 		self.part[1][1] = self.part[1][2] = 0
 		#for i in range(self.width):
 			#self.part[3][i] = 1
@@ -48,13 +48,15 @@ class Field:
 	def place_object(self):
 		for x, y in self.object:
 			self.part[y][x] = 1
-		self.object = [[0,0], [0,1], [0,2], [1,1]]
+		self.object = [[0,0], [1,0], [2,0], [1,1]]
 
 	def new_object(self):
-		while F.down():
-			print_field(F)
-			time.sleep(0.2)
-		self.place_object()
+		while self.part[0][0] == self.part[0][1] == self.part[0][2] == self.part[1][1] ==0: 
+			while F.down():
+				print_field(F)
+				time.sleep(0.2)
+			self.place_object()
+		print_field(F)
 
 
 F = Field(10, 10)
@@ -62,7 +64,9 @@ F.down()
 print_field(F)
 
 F.new_object()
-
+#for i in range(len(F.part)):
+#	for j in range(len(F.part[i])):
+#		print(i, j, F.part[j][i])
 #d = F.down()
 #l = F.line()
 #r = F.right()
