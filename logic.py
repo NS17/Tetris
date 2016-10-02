@@ -51,13 +51,17 @@ class Field:
 		self.object = [[0,0], [1,0], [2,0], [1,1]]
 
 	def new_object(self):
-		while self.part[0][0] == self.part[0][1] == self.part[0][2] == self.part[1][1] ==0: 
-			while F.down():
-				print_field(F)
+		while self.check(): 
+			while self.down():
+				print_field(self)
 				time.sleep(0.2)
 			self.place_object()
-		print_field(F)
+		print_field(self)
 
+	def check(self):
+		for x, y in self.object:
+			if self.part[y][x] == 1: return False
+		return True
 
 F = Field(10, 10)
 F.down()
