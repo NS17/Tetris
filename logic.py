@@ -1,9 +1,10 @@
 # here will be the logic of the program
 # here will be the logic of the program
 from graphics import print_field
-
+import msvcrt
 import time
- 
+import math
+
 class Field:
 	def __init__(self, height, width):
 		self.width = width
@@ -22,14 +23,14 @@ class Field:
 		return True
 	def left(self):
 		for x, y in self.object:
-			if self.part[y][x-1] == 1 or x==0:
+			if x==0 or self.part[y][x-1] == 1:
 				return 
 		for j in range(len(self.object)):
 			self.object[j][0]-=1
 
 	def right(self):
 		for x, y in self.object:
-			if self.part[y][x+1] == 1 or x==self.width-1:
+			if x==self.width-1 or self.part[y][x+1] == 1 :
 				return 
 		for j in range(len(self.object)):
 			self.object[j][0]+=1
@@ -53,8 +54,17 @@ class Field:
 	def new_object(self):
 		while self.check(): 
 			while self.down():
+				was = time.clock()
 				print_field(self)
-				time.sleep(0.2)
+				while(math.fabs(time.clock()-was) < 0.5):
+					if msvcrt.kbhit():
+						var = msvcrt.getch()
+						if var == b'a':
+							self.left()
+							#print_field(self)
+						if var == b'd':
+							self.right()
+							#print_field(self)
 			self.place_object()
 		print_field(self)
 
