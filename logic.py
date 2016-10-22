@@ -4,16 +4,17 @@ from graphics import print_field
 import msvcrt
 import time
 import math
+from random import *
+
 
 class Field:
 	def __init__(self, height, width):
 		self.width = width
 		self.height = height
 		self.part  = [[0] * width for i in range(height)]
+		self.objects = [[[0,0], [1,0], [2,0], [1,1]], [[0,0], [0,1], [0,2]]]
 		self.object = [[0,0], [1,0], [2,0], [1,1]]
-		self.part[1][1] = self.part[1][2] = 0
-		#for i in range(self.width):
-			#self.part[3][i] = 1
+		self.object_center = 1
 	def down(self):
 		for x, y in self.object:
 			if y==self.height-1  or self.part[y+1][x]==1:
@@ -21,6 +22,7 @@ class Field:
 		for j in range(len(self.object)):
 			self.object[j][1]+=1
 		return True
+
 	def left(self):
 		for x, y in self.object:
 			if x==0 or self.part[y][x-1] == 1:
@@ -34,7 +36,22 @@ class Field:
 				return 
 		for j in range(len(self.object)):
 			self.object[j][0]+=1
-		
+
+	def switch(self, c, d):
+		for x, y in self.object:
+			if y+c > self.width-1 or y+c < 0 or -x+d > self.height-1 or -x+d < 0 or self.part[-x+d][y+c] == 1:
+				return 
+		for j in range(len(self.object)):
+			k = self.object[j][0]
+			self.object[j][0]=self.object[j][1]+c
+			self.object[j][1] =-k+d
+
+
+	def turn(self):
+		c = self.object[self.object_center][0] - self.object[self.object_center][1]
+		d = self.object[self.object_center][0] + self.object[self.object_center][1]
+		self.switch(c,d)
+
 	def line(self):
 		lines = 0
 		new_field = []
@@ -50,21 +67,22 @@ class Field:
 		for x, y in self.object:
 			self.part[y][x] = 1
 		self.object = [[0,0], [1,0], [2,0], [1,1]]
-
+			
 	def new_object(self):
 		while self.check(): 
 			while self.down():
 				was = time.clock()
 				print_field(self)
 				while(math.fabs(time.clock()-was) < 0.5):
+					self.line()
 					if msvcrt.kbhit():
 						var = msvcrt.getch()
 						if var == b'a':
 							self.left()
-							#print_field(self)
 						if var == b'd':
 							self.right()
-							#print_field(self)
+						if var == b'w':
+							self.turn()
 			self.place_object()
 		print_field(self)
 
@@ -73,7 +91,7 @@ class Field:
 			if self.part[y][x] == 1: return False
 		return True
 
-F = Field(10, 10)
+F = Field(9, 9)
 F.down()
 print_field(F)
 
