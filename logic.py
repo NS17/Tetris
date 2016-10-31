@@ -4,17 +4,20 @@ from graphics import print_field
 import msvcrt
 import time
 import math
-from random import *
+import random
 
+objects = [[[0,0], [1,0], [2,0], [1,1]], [[0,0], [0,1], [0,2]], [[0,0], [0,1], [1,1], [1,2]]]
 
 class Field:
 	def __init__(self, height, width):
 		self.width = width
 		self.height = height
 		self.part  = [[0] * width for i in range(height)]
-		self.objects = [[[0,0], [1,0], [2,0], [1,1]], [[0,0], [0,1], [0,2]]]
-		self.object = [[0,0], [1,0], [2,0], [1,1]]
+		self.object = self.get_object()
+		self.next_object = self.get_object()
 		self.object_center = 1
+		self.speed = 0.5
+		self.score = 0
 	def down(self):
 		for x, y in self.object:
 			if y==self.height-1  or self.part[y+1][x]==1:
@@ -58,22 +61,34 @@ class Field:
 		for row in self.part:
 			if sum(row) == self.width:
 				lines += 1
+				self.score+=1
+				if self.score == 20:
+					self.speed-=0.1
+					self.score = 0
 			else:
 				new_field.append(row)
-		self.part = new_field + [[0] * self.width for x in range(lines)]
+		self.part = [[0] * self.width for x in range(lines)] + new_field
 		return lines
 
 	def place_object(self):
 		for x, y in self.object:
 			self.part[y][x] = 1
-		self.object = [[0,0], [1,0], [2,0], [1,1]]
+		self.object = self.next_object
+		self.next_object = self.get_object()
+		
+	def  get_object(self):
+		global objects 
+		r = random.randint(0,len(objects)-1)
+		objects = [[[0,0], [1,0], [2,0], [1,1]], [[0,0], [0,1], [0,2]], [[0,0], [0,1], [1,1], [1,2]]] 
+		return objects[r]
+
 			
 	def new_object(self):
 		while self.check(): 
 			while self.down():
 				was = time.clock()
 				print_field(self)
-				while(math.fabs(time.clock()-was) < 0.5):
+				while(math.fabs(time.clock()-was) < self.speed):
 					self.line()
 					if msvcrt.kbhit():
 						var = msvcrt.getch()
